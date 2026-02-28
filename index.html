@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>모바일 테트리스</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="game-panel">
+        <h1>모바일 테트리스</h1>
+        <canvas id="board" width="300" height="600" aria-label="테트리스 게임 보드"></canvas>
+        <div class="controls">
+          <button id="startBtn" type="button">시작 / 재시작</button>
+          <button id="pauseBtn" type="button">일시정지</button>
+        </div>
+      </section>
+
+      <aside class="info-panel">
+        <div class="card stats-grid">
+          <div>
+            <h2>점수</h2>
+            <p id="score">0</p>
+          </div>
+          <div>
+            <h2>레벨</h2>
+            <p id="level">1</p>
+          </div>
+          <div>
+            <h2>라인</h2>
+            <p id="lines">0</p>
+          </div>
+          <div>
+            <h2>다음 블록</h2>
+            <canvas id="next" width="120" height="120"></canvas>
+          </div>
+        </div>
+
+        <div class="card mobile-controls" aria-label="모바일 조작 버튼">
+          <button class="control-btn" id="btnLeft" type="button">◀</button>
+          <button class="control-btn" id="btnRotate" type="button">⟳</button>
+          <button class="control-btn" id="btnRight" type="button">▶</button>
+          <button class="control-btn" id="btnSoft" type="button">▼</button>
+          <button class="control-btn wide" id="btnHard" type="button">하드 드롭</button>
+        </div>
+
+        <div class="card help">
+          <h2>조작법</h2>
+          <ul>
+            <li>터치 버튼: 이동/회전/드롭</li>
+            <li>보드 스와이프 좌/우: 이동</li>
+            <li>보드 탭: 회전</li>
+            <li>보드 스와이프 아래: 하드 드롭</li>
+            <li>키보드도 지원 (PC)</li>
+          </ul>
+        </div>
+
+        <p id="status">시작 버튼을 눌러 게임을 시작하세요.</p>
+      </aside>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,160 @@
+:root {
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --text: #e2e8f0;
+  --accent: #22d3ee;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at top, #1e293b, #0b1020 60%);
+  display: grid;
+  place-items: center;
+  padding: 12px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  width: min(100%, 920px);
+}
+
+.game-panel,
+.info-panel .card {
+  background: color-mix(in srgb, var(--panel) 90%, #000 10%);
+  border: 1px solid #334155;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.game-panel {
+  padding: 12px;
+}
+
+h1,
+h2 {
+  margin: 0 0 10px;
+}
+
+h1 {
+  font-size: 1.3rem;
+  text-align: center;
+  color: var(--accent);
+}
+
+#board {
+  width: min(100%, 300px);
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  background: #020617;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  touch-action: none;
+}
+
+canvas {
+  display: block;
+  background: #020617;
+  border-radius: 8px;
+  border: 1px solid #334155;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+button {
+  border: 1px solid #475569;
+  background: #0f172a;
+  color: var(--text);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+button:active {
+  transform: scale(0.98);
+  border-color: var(--accent);
+}
+
+.info-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.info-panel .card {
+  padding: 10px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.info-panel p {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+#next {
+  width: 100%;
+  max-width: 120px;
+  height: auto;
+}
+
+.mobile-controls {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.control-btn {
+  font-size: 1.1rem;
+  font-weight: 700;
+  min-height: 46px;
+}
+
+.control-btn.wide {
+  grid-column: span 4;
+}
+
+.help ul {
+  margin: 0;
+  padding-left: 16px;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+#status {
+  margin: 4px 2px;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: auto 260px;
+    align-items: start;
+  }
+
+  .game-panel {
+    width: min-content;
+  }
+}
