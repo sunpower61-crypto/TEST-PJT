@@ -13,18 +13,19 @@
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+  font-family: "Roboto", "Noto Sans KR", sans-serif;
   color: var(--text);
   background: radial-gradient(circle at top, #1e293b, #0b1020 60%);
   display: grid;
   place-items: center;
-  padding: 12px;
+  padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
+    max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
 }
 
 .layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 14px;
+  gap: 12px;
   width: min(100%, 920px);
 }
 
@@ -80,10 +81,11 @@ button {
   border: 1px solid #475569;
   background: #0f172a;
   color: var(--text);
-  padding: 10px;
+  padding: 12px;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 0.97rem;
+  user-select: none;
 }
 
 button:active {
@@ -126,9 +128,9 @@ button:active {
 }
 
 .control-btn {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  min-height: 46px;
+  min-height: 52px;
 }
 
 .control-btn.wide {

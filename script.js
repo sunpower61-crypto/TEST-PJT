@@ -57,6 +57,12 @@ function createBoard() {
   return Array.from({ length: ROWS }, () => Array(COLS).fill(null));
 }
 
+function vibrate(duration = 10) {
+  if (navigator.vibrate) {
+    navigator.vibrate(duration);
+  }
+}
+
 function randomPiece() {
   const types = Object.keys(SHAPES);
   const type = types[Math.floor(Math.random() * types.length)];
@@ -118,6 +124,7 @@ function clearLines() {
     lines += cleared;
     level = 1 + Math.floor(lines / 10);
     updateHUD();
+    vibrate(18);
   }
 }
 
@@ -167,6 +174,7 @@ function drop() {
 function hardDrop() {
   while (drop()) score += 2;
   updateHUD();
+  vibrate(12);
 }
 
 function softDrop() {
@@ -224,6 +232,7 @@ function gameOver() {
   running = false;
   cancelAnimationFrame(animationId);
   statusEl.textContent = '게임 오버! 시작 / 재시작 버튼으로 다시 시작하세요.';
+  vibrate([30, 40, 30]);
 }
 
 function togglePause() {
@@ -283,35 +292,52 @@ function executeAction(action) {
   drawBoard();
 }
 
-function bindMobileButton(button, action) {
-  const handler = (e) => {
-    e.preventDefault();
-    executeAction(action);
+function bindMobileButton(button, action, options = { repeat: false }) {
+  let repeatTimer = null;
+
+  const clearRepeat = () => {
+    if (!repeatTimer) return;
+    window.clearInterval(repeatTimer);
+    repeatTimer = null;
   };
-  button.addEventListener('touchstart', handler, { passive: false });
-  button.addEventListener('pointerdown', handler);
+
+  button.addEventListener('pointerdown', (event) => {
+    event.preventDefault();
+    button.setPointerCapture(event.pointerId);
+    executeAction(action);
+
+    if (options.repeat) {
+      repeatTimer = window.setInterval(() => {
+        executeAction(action);
+      }, 95);
+    }
+  });
+
+  button.addEventListener('pointerup', clearRepeat);
+  button.addEventListener('pointercancel', clearRepeat);
+  button.addEventListener('pointerleave', clearRepeat);
 }
 
 function handleBoardTouchStart(event) {
-  const touch = event.touches[0];
-  touchStart = { x: touch.clientX, y: touch.clientY, time: Date.now() };
+  const pointer = event.changedTouches ? event.changedTouches[0] : event;
+  touchStart = { x: pointer.clientX, y: pointer.clientY, time: Date.now() };
 }
 
 function handleBoardTouchEnd(event) {
   if (!touchStart || !running || paused) return;
 
-  const touch = event.changedTouches[0];
-  const dx = touch.clientX - touchStart.x;
-  const dy = touch.clientY - touchStart.y;
+  const pointer = event.changedTouches ? event.changedTouches[0] : event;
+  const dx = pointer.clientX - touchStart.x;
+  const dy = pointer.clientY - touchStart.y;
   const elapsed = Date.now() - touchStart.time;
   const absX = Math.abs(dx);
   const absY = Math.abs(dy);
 
-  if (absX < 15 && absY < 15 && elapsed < 300) {
+  if (absX < 15 && absY < 15 && elapsed < 280) {
     rotatePiece();
-  } else if (absY > 40 && dy > 0) {
+  } else if (absY > 36 && dy > 0) {
     hardDrop();
-  } else if (absX > 20) {
+  } else if (absX > 18) {
     move(dx > 0 ? 1 : -1);
   }
 
@@ -319,20 +345,20 @@ function handleBoardTouchEnd(event) {
   touchStart = null;
 }
 
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', (event) => {
   if (!running || paused) {
-    if (e.key.toLowerCase() === 'p') togglePause();
+    if (event.key.toLowerCase() === 'p') togglePause();
     return;
   }
 
-  if (e.key === 'ArrowLeft') move(-1);
-  else if (e.key === 'ArrowRight') move(1);
-  else if (e.key === 'ArrowUp') rotatePiece();
-  else if (e.key === 'ArrowDown') softDrop();
-  else if (e.code === 'Space') {
-    e.preventDefault();
+  if (event.key === 'ArrowLeft') move(-1);
+  else if (event.key === 'ArrowRight') move(1);
+  else if (event.key === 'ArrowUp') rotatePiece();
+  else if (event.key === 'ArrowDown') softDrop();
+  else if (event.code === 'Space') {
+    event.preventDefault();
     hardDrop();
-  } else if (e.key.toLowerCase() === 'p') {
+  } else if (event.key.toLowerCase() === 'p') {
     togglePause();
   }
 
@@ -342,14 +368,14 @@ document.addEventListener('keydown', (e) => {
 startBtn.addEventListener('click', resetGame);
 pauseBtn.addEventListener('click', togglePause);
 
-bindMobileButton(btnLeft, 'left');
-bindMobileButton(btnRight, 'right');
+bindMobileButton(btnLeft, 'left', { repeat: true });
+bindMobileButton(btnRight, 'right', { repeat: true });
 bindMobileButton(btnRotate, 'rotate');
-bindMobileButton(btnSoft, 'soft');
+bindMobileButton(btnSoft, 'soft', { repeat: true });
 bindMobileButton(btnHard, 'hard');
 
-boardCanvas.addEventListener('touchstart', handleBoardTouchStart, { passive: true });
-boardCanvas.addEventListener('touchend', handleBoardTouchEnd, { passive: true });
+boardCanvas.addEventListener('pointerdown', handleBoardTouchStart);
+boardCanvas.addEventListener('pointerup', handleBoardTouchEnd);
 
 updateHUD();
 drawBoard();
